@@ -1,0 +1,17 @@
+﻿@model ShareNoteModel
+@{
+    ViewData["Title"] = "Share note";
+}
+<form asp-action="Share" method="post">
+    <label asp-for="Username">Username:</label>
+    <input type-="text" asp-for="Username"  class="form-control" />
+    <br/>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+@if(Model.Usernames != null){
+    <ul>
+    @foreach(var user in Model.Usernames) {
+        <li>@user</li> 
+    }
+    </ul>
+}

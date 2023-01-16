@@ -1,0 +1,142 @@
+﻿@model NoteHomeModel
+@{
+    ViewData["Title"] = "Notes";
+    //<a asp-area="" asp-controller="Notes" asp-action="SetPublic">Set as public</a>
+}
+
+<style>
+    table {
+        font-family: Arial,sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    td, th {
+        border: 1px solid dimgrey;
+        text-align: left;
+        padding: 8px;
+    }
+</style>
+<h2>Public notes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PublicNotes) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Title,"Get","Notes", new{ id=item.Id})
+            </td>
+            <td class="text-right">
+                    @item.Username
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+<h2>Your notes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Info</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.YourNotes) {
+            <tr>
+                @if (!item.IsEncrypted)
+                {
+                    <td>
+                        @Html.ActionLink(item.Title,"Get","Notes", new{ id=item.Id})
+                    </td>
+                    <td class="text-right">
+                        @item.Username
+                    </td>
+                    @if (!item.IsPublic)
+                    {
+                        <td>
+                            Private
+                        </td>
+                        <td>
+                            @Html.ActionLink("Share ","Share","Notes", new{ id=item.Id})        
+                        </td>
+                        <td>
+                            @Html.ActionLink("Set as public", "SetPublic", new { id = item.Id });
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            Public
+                        </td>
+                        <td>
+                            @Html.ActionLink(item.Title,"Get","Notes", new{ id=item.Id})
+                        </td>
+                        <td class="text-right">
+                            @item.Username
+                        </td>
+                        <td>
+                            @item.IsPublic
+                        </td>
+                        @if (!item.IsPublic)
+                        {
+                            <td>
+                                @Html.ActionLink("Share ","Share","Notes", new{ id=item.Id})        
+                            </td>
+                            <td>
+                                @Html.ActionLink("Set as public", "SetPublic", new { id = item.Id });
+                            </td>
+                        }
+                    }
+                }
+                else {
+                    <td>
+                        @Html.ActionLink(item.Title,"GetEncrypt","Notes",new{ id=item.Id})
+                    </td>
+                    <td class="text-right">
+                        @item.Username
+                    </td>
+                    <td>
+                        Encrypted
+                    </td>            
+                    <td>
+                        
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="alert">
+    <a class="btn btn-info" asp-area="" asp-controller="Notes" asp-action="Create">Create</a>
+</div>
+
+<h2>Notes shared to you</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.SharedNotes) {
+                <tr>
+                    <td>
+                    @Html.ActionLink(item.Title,"Get","Notes", new{ id=item.Id})
+                    </td>
+                    <td class="text-right">
+                    @item.Username
+                    </td>
+                </tr>
+        }
+    </tbody>
+</table>

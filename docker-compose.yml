@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  projektnotatek:
+    image: ${DOCKER_REGISTRY-}projektnotatek
+    build:
+      context: .
+      dockerfile: ProjektNotatek/Dockerfile
+    ports:
+        - "7210:443"
+        - "7209:80"
+  postgresql_database:
+    image: postgres:latest
+    container_name: identity_DB
+    environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: identityTest
+    ports:
+        - "5432:5432"

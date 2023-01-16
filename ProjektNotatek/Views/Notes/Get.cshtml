@@ -1,0 +1,13 @@
+﻿@using System.Text.Encodings.Web
+@model GetNoteModel
+@{
+    ViewData["Title"] = Model.Note.Title;
+}
+<h2>
+    @Model.Note.Title
+</h2>
+<h5>
+    Author: @Model.Note.Username
+</h5>
+
+<h5>@Html.Raw(Model.Note.Content)</h5>

@@ -1,0 +1,104 @@
+﻿@model CreateNoteModel
+@{
+    ViewData["Title"] = "Create note";
+    var options = new List<string>() { "Normal", "Public", "Encrypted" };
+}
+<style>
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.option-button {
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 5px;
+    border: 1px solid #ddddd;
+    background-color: #ffffff;
+    outline: none;
+    color: #020929;
+}
+#link {
+    height: 28px;
+    margin-left: 10px;
+    place-items: center;
+    border-radius: 5px;
+    border: 1px solid #ddddd;
+    background-color: #ffffff;
+    color: #020929;
+}
+
+select {
+    padding: 7px;
+    border: 1px solid #020929;
+    border-radius: 3px;
+}
+
+.options label,
+.options select {
+    font-family: "Popins", sans-serif;
+}
+
+#text-input {
+    margin-top: 10px;
+    border: 1px solid #dddddd;
+    padding: 20px;
+    height: 50vh;
+}
+
+.active {
+    background-color: #e0e9ff;
+}
+</style>
+<div class="options">
+<button id="bold" class="option-button format">Bold</button>
+<button id="italic" class="option-button format">Italic</button>
+<button id="underline" class="option-button format">UnderLine</button>
+</div>
+<br/>
+<select id="formatBlock" class="adv-option-button">
+    <option value="H1">H1</option>
+    <option value="H2">H2</option>
+    <option value="H3">H3</option>
+    <option value="H4">H4</option>
+    <option value="H5">H5</option>
+</select>
+<button id="link" onclick="link()"> Create Link</button>
+<button id="link" onclick="photo()"> Create photo</button>
+
+
+<form asp-controller="Notes" asp-action="Create" metod="post">
+    @Html.ValidationSummary()
+    <div class="form-group">
+        <label asp-for="Title">Title:</label>
+        <input type-="text" asp-for="Title" class="form-control" />
+    </div>
+
+    
+    <!--<div:input class="form-control"id="text-input" contenteditable="true" asp-for="Note"></div:input>-->
+    @Html.HiddenFor(m => m.NoteContent)
+    <!--
+    <div class="form-group" id="text-input">
+        <label asp-for="Note">Note:</label>
+        <input type-="text" asp-for="Note" class="form-control" />
+    </div> -->
+    <div id="text-input" contenteditable="true">
+    </div>
+    <br/>
+    
+    <div class="form-group col-4">
+        @Html.DropDownListFor(x => x.Option, options.Select(s => new SelectListItem { Text = s, Value = s }), "Options", null)
+    </div>
+
+    
+    <div class="form-group">
+        <label asp-for="Password">Password:</label>
+        <input type="password" asp-for="Password" class="form-control" />
+    </div>
+    
+    <br/>
+    <button type="submit" class="btn btn-primary" onclick="updateNoteContent();">Save</button>
+</form>
