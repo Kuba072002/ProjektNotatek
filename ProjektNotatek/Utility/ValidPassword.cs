@@ -3,6 +3,10 @@
 namespace ProjektNotatek.Utility {
     public class ValidPassword : ValidationAttribute {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext) {
+            if(value == null) {
+                return new ValidationResult
+                    ("Brak hasla");
+            }
             string password = value.ToString();
             bool hasLowerLetter = false;
             bool hasUpperLetter = false;

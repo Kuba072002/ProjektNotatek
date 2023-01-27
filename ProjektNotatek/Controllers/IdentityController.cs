@@ -28,12 +28,6 @@ namespace ProjektNotatek.Controllers {
                         UserName = model.Username,
                         Email = model.Email
                     };
-                    //var entropy = CalculateEntropy(model.Password);
-                    //if(entropy < 40) {
-                    //    ModelState.AddModelError("Signup", "Your password is too weak , entropy = "+entropy.ToString("0.##")+" (entropy must be bigger than 40).");
-
-                    //    return View(model);
-                    //}
 
                     var result = await _userManager.CreateAsync(user,model.Password);
                     if (result.Succeeded) {
@@ -45,7 +39,6 @@ namespace ProjektNotatek.Controllers {
                             new Claim(ClaimTypes.Role, "User")
                         };
                         await _userManager.AddClaimsAsync(user,claims);
-                        //await _userManager.AddLoginAsync
 
                         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var confiramtionLink = Url
@@ -91,8 +84,6 @@ namespace ProjektNotatek.Controllers {
             if (ModelState.IsValid) {
                 var user = await _userManager.FindByEmailAsync(model.Email);
                 if (user != null) {
-//                    _signInManager.Gete
-
                     var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, true);
                     if (result.Succeeded) {
                         return Redirect("~/");

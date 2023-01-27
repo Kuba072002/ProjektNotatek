@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "Share note";
 }
+
 <form asp-action="Share" method="post">
+    @Html.ValidationSummary()
     <label asp-for="Username">Username:</label>
     <input type-="text" asp-for="Username"  class="form-control" />
     <br/>

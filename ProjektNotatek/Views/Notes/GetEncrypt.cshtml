@@ -4,6 +4,7 @@
     ViewData["Title"] = "Share note";
 }
 <form asp-action="GetEncrypt" method="post">
+    @Html.ValidationSummary()
     <label asp-for="Password">Password:</label>
     <input type="password" asp-for="Password"  class="form-control" />
     <br/>

@@ -52,14 +52,15 @@
             <tr>
                 @if (!item.IsEncrypted)
                 {
-                    <td>
-                        @Html.ActionLink(item.Title,"Get","Notes", new{ id=item.Id})
-                    </td>
-                    <td class="text-right">
-                        @item.Username
-                    </td>
+                    
                     @if (!item.IsPublic)
                     {
+                        <td>
+                            @Html.ActionLink(item.Title,"Get","Notes", new{ id=item.Id})
+                        </td>
+                        <td class="text-right">
+                            @item.Username
+                        </td>
                         <td>
                             Private
                         </td>
@@ -73,16 +74,13 @@
                     else
                     {
                         <td>
-                            Public
-                        </td>
-                        <td>
                             @Html.ActionLink(item.Title,"Get","Notes", new{ id=item.Id})
                         </td>
                         <td class="text-right">
                             @item.Username
                         </td>
                         <td>
-                            @item.IsPublic
+                            Public
                         </td>
                         @if (!item.IsPublic)
                         {
@@ -105,9 +103,6 @@
                     <td>
                         Encrypted
                     </td>            
-                    <td>
-                        
-                    </td>
                 }
             </tr>
         }
