@@ -11,6 +11,8 @@ namespace ProjektNotatek.Models {
         public string? Option { get; set; }
         
         public string? Password { get; set; }
+        [Compare("Password", ErrorMessage = "The passwords do not match.")]
+        public string? ConfirmPassword { get; set; }
 
     }
 }

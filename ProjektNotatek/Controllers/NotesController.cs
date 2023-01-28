@@ -61,8 +61,8 @@ namespace ProjektNotatek.Controllers {
         [HttpPost]
         public async Task<ActionResult> CreateAsync(CreateNoteModel model) {
             if (ModelState.IsValid) {
-                if (model.Option == null)
-                    model.Option = "Normal";
+                //if (model.Option == null)
+                //    model.Option = "Normal";
                 var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 var ifExist = await _dataContext.Notes
                     .Where(n => n.Username.Equals(username) && n.Title.Equals(model.Title))

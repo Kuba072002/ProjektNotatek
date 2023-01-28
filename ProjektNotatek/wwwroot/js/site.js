@@ -3,53 +3,9 @@
 
 // Write your JavaScript code.
 
-
-let optionsButtons = document.querySelectorAll(".option-button");
-let wrightArea = document.getElementById("text-input");
-let formatButtons = document.querySelectorAll(".format");
-let advancedOptionButton = document.querySelectorAll(".adv-option-button");
-
-const initializer = () => {
-    higlighter(formatButtons, false);
-}
-
-const higlighter = (className, needsRemoval) => {
-    className.forEach((button) => {
-        button.addEventListener("click", () => {
-            if (!needsRemoval) {
-                button.classList.toggle("active");
-            }
-        });
-    });
-}
-
-const higlighterRemover = (className) => {
-    className.forEach((button) => {
-        button.classList.remove("active");
-    });
-}
-
-const modifyText = (command, defaultUi, value) => {
-    document.execCommand(command, defaultUi, value);
-}
-
-optionsButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-        modifyText(button.id, false, null);
-    })
-});
-
-advancedOptionButton.forEach((button) => {
-    button.addEventListener("change", () => {
-        modifyText(button.id, false, button.value);
-    });
-});
-
 function updateNoteContent() {
     document.getElementById('NoteContent').value = wrightArea.innerHTML;
 }
-
-window.onload = initializer();
 
 function link() {
     if (window.getSelection().toString()) {
