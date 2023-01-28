@@ -2,13 +2,13 @@
 @using System.Web;
 @model GetNoteModel
 @{
-    ViewData["Title"] = Model.Note.Title;
+    ViewData["Title"] = Model.Title;
 }
 <h2>
-    @Model.Note.Title
+    @Model.Title
 </h2>
 <h5>
-    Author: @Model.Note.Username
+    Author: @Model.Author
 </h5>
 
-<p>@Html.Raw(Model.Note.Content)</p>
+<p>@Html.Raw(Model.Content)</p>

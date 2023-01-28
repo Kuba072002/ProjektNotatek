@@ -22,7 +22,7 @@ namespace ProjektNotatek.Controllers {
         }
 
         public async Task<ActionResult> IndexAsync() {
-            var claims = HttpContext.User.Claims;
+            //var claims = HttpContext.User.Claims;
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             var user = await _userManager.FindByNameAsync(username);
             NoteHomeModel model = new NoteHomeModel();
@@ -41,7 +41,10 @@ namespace ProjektNotatek.Controllers {
             if (note != null && user != null) {
                 if (CheckIfUserHaveAccessToNoteAsync(note, username)) {
                     var model = new GetNoteModel {
-                        Note = note
+                        //Note = note
+                        Content = note.Content,
+                        Author = note.Username,
+                        Title = note.Title
                     };
                     return View("Get", model);
                 }
@@ -183,9 +186,13 @@ namespace ProjektNotatek.Controllers {
         private Note CreateEncryptedNote(Note note) {
             note.IsPublic = false;
             note.IsEncrypted = true;
-            CustomPasswordHasher passwordHasher = new();
-            note.Password = Convert.ToBase64String(passwordHasher.HashMethod(note.Password, 10000));
-            note.Content = NoteEncrypter.Encrypt(note.Content);
+            //CustomPasswordHasher passwordHasher = new();
+            //note.Password = Convert.ToBase64String(passwordHasher.HashMethod(note.Password, 10000));
+            //note.Content = NoteEncrypter.Encrypt(note.Content);
+            NoteEncrypter.Encrypt(note.Content,note.Password,out string encodedcontent, out string encodedpassword);
+            note.Password = encodedpassword;
+            note.Content= encodedcontent;
+
             return note;
         }
 
@@ -209,15 +216,17 @@ namespace ProjektNotatek.Controllers {
             if (note != null && username != null) {
                 if (username.Equals(note.Username)) {
                     CustomPasswordHasher passwordHasher = new();
-                    int embeddedIterCount;
-                    if (!passwordHasher.VerifyPassword(Convert.FromBase64String(note.Password), model.Password, out embeddedIterCount)) {
+                    if (!passwordHasher.VerifyPassword(Convert.FromBase64String(note.Password), model.Password, out int embeddedIterCount)) {
                         ModelState.AddModelError("GetEncrypt", "Wrong password");
                         return View(model);
                     }
                     if (embeddedIterCount == 10000) {
-                        note.Content = NoteEncrypter.Decrypt(note.Content);
+                        note.Content = NoteEncrypter.Decrypt(note.Content,note.Password);
                         var model1 = new GetNoteModel {
-                            Note = note
+                            //Note = note
+                            Content = note.Content,
+                            Author = note.Username,
+                            Title = note.Title
                         };
                         return View("Get", model1);
                     }
