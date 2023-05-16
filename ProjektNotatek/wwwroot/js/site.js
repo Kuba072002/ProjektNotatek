@@ -4,6 +4,7 @@
 // Write your JavaScript code.
 
 function updateNoteContent() {
+    let wrightArea = document.getElementById("text-input");
     document.getElementById('NoteContent').value = wrightArea.innerHTML;
 }
 

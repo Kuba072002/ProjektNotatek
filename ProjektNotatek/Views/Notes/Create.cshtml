@@ -3,27 +3,6 @@
     ViewData["Title"] = "Create note";
     var options = new List<string>() { "Normal", "Public", "Encrypted" };
 }
-<style>
-#password {
-    display: none;
-}
-
-#text-input {
-    min-height: 50vh;
-}
-
-.sticky_card {
-      position: relative;
-    }
-
-    .sticky_card .card-body {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background-color: white;
-    }
-
-</style>
 <form asp-controller="Notes" asp-action="Create" metod="post">
     @Html.ValidationSummary()
     <div class="form-group">
@@ -63,12 +42,10 @@
 
 
 <script>   
-let optionsButtons = document.querySelectorAll(".option-button");
-let wrightArea = document.getElementById("text-input");
-let advancedOptionButton = document.querySelectorAll(".adv-option-button");
-
 const initializer = () => {
-    document.getElementById("Option").value = "Normal";
+    if( document.getElementById("Option").value == "Encrypted"){
+        document.getElementById("password").style.display = "block";
+    }
     document.getElementById('text-input').innerHTML = document.getElementById('NoteContent').value;
     document.getElementById('Option').onchange = function(){
         if( document.getElementById("Option").value == "Encrypted"){
@@ -79,22 +56,5 @@ const initializer = () => {
          }
     };
 }
-
-const modifyText = (command, defaultUi, value) => {
-    document.execCommand(command, defaultUi, value);
-}
-
-optionsButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-        modifyText(button.id, false, null);
-    })
-});
-
-advancedOptionButton.forEach((button) => {
-    button.addEventListener("change", () => {
-        modifyText(button.id, false, button.value);
-    });
-});
-
 window.onload = initializer();
 </script>

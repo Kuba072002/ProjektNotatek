@@ -21,6 +21,7 @@ body {
   margin-bottom: 60px;
 }
 
+
 .create_buttons {
     display: flex;
     flex-direction: row;
@@ -32,4 +33,23 @@ body {
         flex-direction: column;
         gap:0;
     }
+}
+
+#password {
+    display: none;
+}
+
+#text-input {
+    min-height: 50vh;
+}
+
+.sticky_card {
+    position: relative;
+}
+
+.sticky_card .card-body {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: white;
 }
