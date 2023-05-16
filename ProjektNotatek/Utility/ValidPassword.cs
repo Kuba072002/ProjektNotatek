@@ -44,11 +44,11 @@ namespace ProjektNotatek.Utility {
             double entropy = password.Length * Math.Log2(poolSize);
             if (entropy < 30) {
                 return new ValidationResult
-                    ("Bardzo słabe hasło" + entropy.ToString("0.##"));
+                    ("Very weak password " + entropy.ToString("0.##"));
             }
             if (entropy < 50) {
                 return new ValidationResult
-                    ("Hasło nie jest wystarczajaco mocne " + entropy.ToString("0.##"));
+                    ("Password is not good enough " + entropy.ToString("0.##"));
             }
             else {
                 return ValidationResult.Success;

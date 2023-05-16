@@ -7,7 +7,6 @@ using ProjektNotatek.Data;
 using ProjektNotatek.Models;
 using ProjektNotatek.Utility;
 using System.Security.Claims;
-//using ProjektNotatek.Models.Notes;
 
 namespace ProjektNotatek.Controllers {
     [Authorize]
@@ -80,8 +79,7 @@ namespace ProjektNotatek.Controllers {
                         await _dataContext.SaveChangesAsync();
                         return RedirectToAction("Index");
                     }
-                    //if(!model.Password.Equals("")) {
-                    var s = CheckPasswordQuality(model.Password);
+                    var s = NoteEncrypter.CheckPasswordQuality(model.Password);
                     if (!s.Equals("ok")) {
                         ModelState.AddModelError("Createnote", s);
                         return View(model);
@@ -253,58 +251,6 @@ namespace ProjektNotatek.Controllers {
             }
             return Redirect("~/Identity/AccessDenied");
         }
-
-
-        private string CheckPasswordQuality(string password) {
-            bool hasLowerLetter = false;
-            bool hasUpperLetter = false;
-            bool hasDigit = false;
-            bool hasSpecialChar = false;
-            int poolSize = 0;
-            if (password == null || password.Length == 0)
-                return "Haslo nie moze byc puste";
-            foreach (char c in password) {
-                if (char.IsLower(c)) {
-                    hasLowerLetter = true;
-                }
-                else if (char.IsUpper(c)) {
-                    hasUpperLetter = true;
-                }
-                else if (char.IsDigit(c)) {
-                    hasDigit = true;
-                }
-                else {
-                    hasSpecialChar = true;
-                }
-            }
-
-            if (hasLowerLetter) {
-                poolSize += 26;
-            }
-            if (hasUpperLetter) {
-                poolSize += 26;
-            }
-            if (hasDigit) {
-                poolSize += 10;
-            }
-            if (hasSpecialChar) {
-                poolSize += 32;
-            }
-
-            double entropy = password.Length * Math.Log2(poolSize);
-            if (entropy < 30) {
-                return
-                    ("Bardzo słabe hasło" + entropy.ToString("0.##"));
-            }
-            if (entropy < 50) {
-                return
-                    ("Hasło nie jest wystarczajaco mocne " + entropy.ToString("0.##"));
-            }
-            else {
-                return "ok";
-            }
-        }
-
 
     }
 }

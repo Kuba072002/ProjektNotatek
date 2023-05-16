@@ -64,5 +64,44 @@ namespace ProjektNotatek.Utility {
 
             return Encoding.UTF8.GetString(plainBytes);
         }
+
+        public static string CheckPasswordQuality(string password)
+        {
+            bool hasLowerLetter = false;
+            bool hasUpperLetter = false;
+            bool hasDigit = false;
+            bool hasSpecialChar = false;
+            int poolSize = 0;
+            if (password == null || password.Length == 0)
+                return "Haslo nie moze byc puste";
+            foreach (char c in password)
+            {
+                if (char.IsLower(c)) 
+                    hasLowerLetter = true;
+                else if (char.IsUpper(c))
+                    hasUpperLetter = true;
+                else if (char.IsDigit(c))
+                    hasDigit = true;
+                else
+                    hasSpecialChar = true;
+            }
+
+            if (hasLowerLetter)
+                poolSize += 26;
+            if (hasUpperLetter)
+                poolSize += 26;
+            if (hasDigit)
+                poolSize += 10;
+            if (hasSpecialChar)
+                poolSize += 32;
+            
+            double entropy = password.Length * Math.Log2(poolSize);
+            if (entropy < 25)
+                return("Bardzo słabe hasło" + entropy.ToString("0.##"));
+            if (entropy < 40)
+                return("Hasło nie jest wystarczajaco mocne " + entropy.ToString("0.##"));
+            else
+                return "ok";
+        }
     }
 }
