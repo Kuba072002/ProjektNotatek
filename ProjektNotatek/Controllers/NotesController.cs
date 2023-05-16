@@ -22,11 +22,11 @@ namespace ProjektNotatek.Controllers {
         }
 
         public async Task<ActionResult> IndexAsync() {
-            //var claims = HttpContext.User.Claims;
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             var user = await _userManager.FindByNameAsync(username);
             NoteHomeModel model = new NoteHomeModel();
-            if (user != null) {
+            if (user != null) 
+            {
                 model.PublicNotes = await GetPublicNotes(username);
                 model.YourNotes = await _dataContext.Notes.Where(n => n.Username.Equals(username)).ToListAsync();
                 model.SharedNotes = await GetSharedNotes(username);
@@ -38,17 +38,18 @@ namespace ProjektNotatek.Controllers {
             var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             var user = await _userManager.FindByNameAsync(username);
-            if (note != null && user != null) {
-                if (CheckIfUserHaveAccessToNoteAsync(note, username)) {
-                    var model = new GetNoteModel {
-                        //Note = note
+            if (note != null && user != null) 
+            {
+                if (CheckIfUserHaveAccessToNoteAsync(note, username)) 
+                {
+                    var model = new GetNoteModel 
+                    {
                         Content = note.Content,
                         Author = note.Username,
                         Title = note.Title
                     };
                     return View("Get", model);
                 }
-                return Redirect("~/Identity/AccessDenied");
             }
             return Redirect("~/Identity/AccessDenied");
         }
@@ -61,8 +62,6 @@ namespace ProjektNotatek.Controllers {
         [HttpPost]
         public async Task<ActionResult> CreateAsync(CreateNoteModel model) {
             if (ModelState.IsValid) {
-                //if (model.Option == null)
-                //    model.Option = "Normal";
                 var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
                 var ifExist = await _dataContext.Notes
                     .Where(n => n.Username.Equals(username) && n.Title.Equals(model.Title))
@@ -71,7 +70,6 @@ namespace ProjektNotatek.Controllers {
                     var sanitizer = new HtmlSanitizer();
                     bool isPublic = model.Option.Equals("Public") ? true : false;
                     Note note = new Note {
-                        //UserId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier),
                         Username = username,
                         Content = sanitizer.Sanitize(model.NoteContent),
                         Title = model.Title,
@@ -89,7 +87,6 @@ namespace ProjektNotatek.Controllers {
                         return View(model);
                     }
                     note.Password = model.Password;
-                    //}
                     var encryptedNote = CreateEncryptedNote(note);
                     _dataContext.Notes.Add(encryptedNote);
                     await _dataContext.SaveChangesAsync();
@@ -138,7 +135,7 @@ namespace ProjektNotatek.Controllers {
                         return View("Share", new ShareNoteModel {
                             Username = string.Empty,
                             Usernames = userNames
-                        });//await _dataContext.NotesShared.Where(ns => ns.NoteId == note.Id).Select(ns => ns.Username).ToListAsync();
+                        });
                     }
                     ModelState.AddModelError("Share", "Problem - user not exist or already shared");
                     return View(model);
@@ -168,7 +165,7 @@ namespace ProjektNotatek.Controllers {
             var notes = await _dataContext.NotesShared
                     .Where(s => s.Username.Equals(username))
                     .Select(ns => ns.Note).ToListAsync();
-            return notes;//await _dataContext.Notes.Where(n => notesId.Contains(n.Id)).ToListAsync();
+            return notes;
         }
 
         private bool CheckIfUserHaveAccessToNoteAsync(Note note, string username) {
@@ -186,9 +183,6 @@ namespace ProjektNotatek.Controllers {
         private Note CreateEncryptedNote(Note note) {
             note.IsPublic = false;
             note.IsEncrypted = true;
-            //CustomPasswordHasher passwordHasher = new();
-            //note.Password = Convert.ToBase64String(passwordHasher.HashMethod(note.Password, 10000));
-            //note.Content = NoteEncrypter.Encrypt(note.Content);
             NoteEncrypter.Encrypt(note.Content,note.Password,out string encodedcontent, out string encodedpassword);
             note.Password = encodedpassword;
             note.Content= encodedcontent;
@@ -212,7 +206,6 @@ namespace ProjektNotatek.Controllers {
         public async Task<ActionResult> GetEncrypt(GetEncryptedModel model, int id) {
             var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            //var user = await _userManager.FindByNameAsync(username);
             if (note != null && username != null) {
                 if (username.Equals(note.Username)) {
                     CustomPasswordHasher passwordHasher = new();
@@ -223,7 +216,6 @@ namespace ProjektNotatek.Controllers {
                     if (embeddedIterCount == 10000) {
                         note.Content = NoteEncrypter.Decrypt(note.Content,note.Password);
                         var model1 = new GetNoteModel {
-                            //Note = note
                             Content = note.Content,
                             Author = note.Username,
                             Title = note.Title
