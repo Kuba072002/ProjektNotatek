@@ -1,0 +1,55 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="create_buttons">
+    <div class="d-flex gap-3 mb-2">
+        <div class="d-flex gap-1">
+            <button id="undo" type="button" class="btn btn-outline-primary option-button">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </button>
+            <button id="redo" type="button" class="btn btn-outline-primary option-button">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
+        </div>
+        <div class="d-flex  gap-1">
+          <button id="bold" type="button" class="btn btn-outline-primary option-button" data-bs-toggle="button"><i class="bi bi-type-bold"></i></button>
+          <button id="italic" type="button" class="btn btn-outline-primary option-button" data-bs-toggle="button"><i class="bi bi-type-italic"></i></button>
+          <button id="underline" type="button" class="btn btn-outline-primary option-button" data-bs-toggle="button"><i class="bi bi-type-underline"></i></button>
+        </div>
+    </div>
+    <div class="d-flex gap-3 mb-2">
+        <div class=" d-flex gap-1">
+          <button id="insertOrderedList" type="button" class="btn btn-outline-primary option-button">
+            <i class="bi bi-list-ol"></i>
+          </button>
+          <button id="insertUnorderedList"type="button" class="btn btn-outline-primary option-button">
+            <i class="bi bi-list-ul"></i>
+          </button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check option-button" name="btnradio" id="justifyLeft" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="justifyLeft"><i class="bi bi-text-left"></i></label>
+            <input type="radio" class="btn-check option-button" name="btnradio" id="justifyCenter" autocomplete="off">
+            <label class="btn btn-outline-primary" for="justifyCenter"><i class="bi bi-text-center"></i></label>
+            <input type="radio" class="btn-check option-button" name="btnradio" id="justifyRight" autocomplete="off">
+            <label class="btn btn-outline-primary" for="justifyRight"><i class="bi bi-text-right"></i></label>
+        </div>
+    </div>
+</div>
+<div class="d-flex flex-row gap-2">
+  <div class="col-2">
+    <select id="formatBlock" class="text-primary border-primary form-select adv-option-button">
+      <option value="" selected disabled hidden>H1</option>
+      <option value="p">Paragraph</option>
+      <option value="H1">H1</option>
+      <option value="H2">H2</option>
+      <option value="H3">H3</option>
+      <option value="H4">H4</option>
+      <option value="H5">H5</option>
+    </select>
+  </div>
+  <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#linkModal"> Create Link</button>
+  <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#photoModal">Add photo</button>
+</div>

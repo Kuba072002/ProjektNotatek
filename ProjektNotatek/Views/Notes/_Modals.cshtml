@@ -1,0 +1,64 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<!-- Photo Modal -->
+<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="photoModalLabel">Photo add</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-3">
+            <label>Add URL</label>
+            <input type="text" class="form-control" id="url-input" placeholder="Enter URL">
+            <label>Align</label>
+            <select class="form-select mt-2" id="alignment-input" aria-label="Default select example">
+                <option value="1">Left</option>
+                <option value="2">Center</option>
+                <option value="3">Right</option>
+            </select>
+            <label>Add caption</label>
+            <input type="text" class="form-control mt-2" id="caption-input" placeholder="Enter caption">
+            <label>Picture Size</label>
+            <select class="form-select mt-2" id="size-input">
+                <option value="1">Default</option>
+                <option value="2">50%</option>
+                <option value="3">75%</option>
+            </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="addPhoto()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Link Modal -->
+<div class="modal fade" id="linkModal" tabindex="-1" aria-labelledby="linkModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="linkModalLabel">Link add</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group mb-3">
+            <label>Add URL</label>
+            <input type="text" class="form-control" id="link-url-input" placeholder="Enter URL">
+            <label>Add text</label>
+            <input type="text" class="form-control mt-2" id="linktext-input" placeholder="Enter text">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="addLink()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

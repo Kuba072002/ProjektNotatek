@@ -4,99 +4,43 @@
     var options = new List<string>() { "Normal", "Public", "Encrypted" };
 }
 <style>
-.options {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 15px;
-}
-
-.option-button {
-    height: 28px;
-    display: grid;
-    place-items: center;
-    border-radius: 5px;
-    border: 1px solid #ddddd;
-    background-color: #ffffff;
-    outline: none;
-    color: #020929;
-}
-#link {
-    height: 28px;
-    margin-left: 10px;
-    place-items: center;
-    border-radius: 5px;
-    border: 1px solid #ddddd;
-    background-color: #ffffff;
-    color: #020929;
-}
-
-select {
-    padding: 7px;
-    border: 1px solid #020929;
-    border-radius: 3px;
-}
-
-.options label,
-.options select {
-    font-family: "Popins", sans-serif;
-}
-
 #password {
     display: none;
 }
 
 #text-input {
-    margin-top: 10px;
-    border: 1px solid #dddddd;
-    padding: 20px;
-    height: auto;
     min-height: 50vh;
 }
 
-.active {
-    background-color: #e0e9ff;
-}
+.sticky_card {
+      position: relative;
+    }
+
+    .sticky_card .card-body {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: white;
+    }
+
 </style>
-<div class="options">
-<button id="bold" class="option-button format">Bold</button>
-<button id="italic" class="option-button format">Italic</button>
-<button id="underline" class="option-button format">UnderLine</button>
-</div>
-<br/>
-<select id="formatBlock" class="adv-option-button">
-    <option value="" selected disabled hidden>H1</option>
-    <option value="H1">H1</option>
-    <option value="H2">H2</option>
-    <option value="H3">H3</option>
-    <option value="H4">H4</option>
-    <option value="H5">H5</option>
-</select>
-<button id="link" onclick="link()"> Create Link</button>
-<button id="link" onclick="photo()"> Create photo</button>
-
-
 <form asp-controller="Notes" asp-action="Create" metod="post">
     @Html.ValidationSummary()
     <div class="form-group">
         <label asp-for="Title">Title:</label>
         <input type-="text" asp-for="Title" class="form-control" />
     </div>
-
-    
-    <!--<div:input class="form-control"id="text-input" contenteditable="true" asp-for="Note"></div:input>-->
+   
     @Html.HiddenFor(m => m.NoteContent)
-    <!--
-    <div class="form-group" id="text-input">
-        <label asp-for="Note">Note:</label>
-        <input type-="text" asp-for="Note" class="form-control" />
-    </div> -->
-    <div id="text-input" contenteditable="true">
+    <div class="card mt-3 sticky_card">
+        <div class="card-body border-bottom border-1">
+            @Html.Partial("_Toolbar")
+        </div>
+        <div id="text-input" class="form-control mt-2 overflow-auto" contenteditable="true">
+        </div>
     </div>
-    <br/>
-    
-    <div class="form-group col-4">
-        @Html.DropDownListFor(x => x.Option, options.Select(s => new SelectListItem { Text = s, Value = s }))
+    <div class="form-group col-4 mt-3">
+        @Html.DropDownListFor(x => x.Option, options.Select(s => new SelectListItem { Text = s, Value = s }), new { @class = "form-select " })
     </div>
     
     <div id="password">
@@ -111,18 +55,20 @@ select {
     </div>
     
     <br/>
-    <button type="submit" class="btn btn-primary" onclick="updateNoteContent();">Save</button>
+    <button type="submit" class="btn btn-primary w-100 mt-2" onclick="updateNoteContent();">Save</button>
+    <a type="button" class="btn btn-primary w-100 mt-2" asp-area="" asp-controller="Notes" asp-action="Index">Back</a>
 </form>
+
+@Html.Partial("_Modals")
+
 
 <script>   
 let optionsButtons = document.querySelectorAll(".option-button");
 let wrightArea = document.getElementById("text-input");
-let formatButtons = document.querySelectorAll(".format");
 let advancedOptionButton = document.querySelectorAll(".adv-option-button");
 
 const initializer = () => {
     document.getElementById("Option").value = "Normal";
-    higlighter(formatButtons, false);
     document.getElementById('text-input').innerHTML = document.getElementById('NoteContent').value;
     document.getElementById('Option').onchange = function(){
         if( document.getElementById("Option").value == "Encrypted"){
@@ -132,22 +78,6 @@ const initializer = () => {
              document.getElementById("password").style.display = "none";
          }
     };
-}
-
-const higlighter = (className, needsRemoval) => {
-    className.forEach((button) => {
-        button.addEventListener("click", () => {
-            if (!needsRemoval) {
-                button.classList.toggle("active");
-            }
-        });
-    });
-}
-
-const higlighterRemover = (className) => {
-    className.forEach((button) => {
-        button.classList.remove("active");
-    });
 }
 
 const modifyText = (command, defaultUi, value) => {
