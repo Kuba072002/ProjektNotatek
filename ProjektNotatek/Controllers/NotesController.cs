@@ -1,4 +1,5 @@
-﻿using Ganss.Xss;
+﻿using AngleSharp.Dom;
+using Ganss.Xss;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -148,6 +149,9 @@ namespace ProjektNotatek.Controllers {
         }
         [HttpPost]
         public async Task<ActionResult> Share(ShareNoteModel model, int id) {
+            var userNames = await _dataContext.NotesShared
+                            .Where(ns => ns.NoteId == id).Select(ns => ns.Username).ToListAsync();
+            model.Usernames = userNames;
             if (ModelState.IsValid) {
                 var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
                 var authorName = HttpContext.User.FindFirstValue(ClaimTypes.Name);
@@ -157,8 +161,6 @@ namespace ProjektNotatek.Controllers {
                         return View(model);
                     }
                     var user = await _userManager.FindByNameAsync(model.Username);
-                    var userNames = await _dataContext.NotesShared
-                            .Where(ns => ns.NoteId == note.Id).Select(ns => ns.Username).ToListAsync();
                     if (user != null && !userNames.Contains(model.Username)) {
                         _dataContext.NotesShared.Add(new NoteShared {
                             Username = model.Username,
@@ -178,7 +180,7 @@ namespace ProjektNotatek.Controllers {
                 }
                 return Redirect("~/Home/Error");
             }
-            return Redirect("~/Identity/AccessDenied");
+            return View(model);
         }
 
         public async Task<ActionResult> SetPublicAsync(int id) {
