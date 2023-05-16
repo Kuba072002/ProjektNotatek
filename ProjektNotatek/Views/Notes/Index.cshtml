@@ -30,6 +30,7 @@
             <th>Info</th>
             <th>Share</th>
             <th>Public</th>
+            <th>Edit</th>
             <th>Delete</th>
         </tr>
     </thead>
@@ -52,6 +53,7 @@
                         <td>disabled</td> 
                         <td>@Html.ActionLink("Set as private", "SetPrivate", new { id = item.Id })</td>
                     }
+                        <td>@Html.ActionLink(item.Title,"Edit","Notes", new{ id=item.Id})</td>
                 }
                 else {
                     <td>@Html.ActionLink(item.Title,"GetEncrypt","Notes",new{ id=item.Id})</td>
@@ -59,6 +61,7 @@
                     <td>Encrypted</td>   
                     <td>disabled</td> 
                     <td>disabled</td> 
+                    <td>disabled</td>
                 }
                     <td>
                       <a href="@Url.Action("Delete", "Notes", new { id = item.Id })"

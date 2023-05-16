@@ -8,6 +8,11 @@ function updateNoteContent() {
     document.getElementById('NoteContent').value = wrightArea.innerHTML;
 }
 
+function updateEditedNoteContent() {
+    let wrightArea = document.getElementById("text-input");
+    document.getElementById('EditedNoteContent').value = wrightArea.innerHTML;
+}
+
 function addLink() {
     var a = document.createElement('a');
     var url = document.getElementById("link-url-input").value;

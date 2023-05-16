@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjektNotatek.Data;
 using ProjektNotatek.Models;
+using ProjektNotatek.Models.Notes;
 using ProjektNotatek.Utility;
 using System.Security.Claims;
 
@@ -96,6 +97,42 @@ namespace ProjektNotatek.Controllers {
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Edit(int id)
+        {
+            var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
+            var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+            var user = await _userManager.FindByNameAsync(username);
+            if (note != null && user != null && note.Username.Equals(username))
+            {
+                if (note.IsEncrypted)
+                    return Redirect("~/Identity/AccessDenied");
+                var model = new EditNoteModel();
+                model.EditedNoteContent = note.Content;
+                return View(model);
+            }
+            return Redirect("~/Identity/AccessDenied");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditAsync(EditNoteModel model,int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
+                var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+                var user = await _userManager.FindByNameAsync(username);
+                if (note != null && user != null && note.Username.Equals(username))
+                {
+                    var sanitizer = new HtmlSanitizer();
+                    note.Content = sanitizer.Sanitize(model.EditedNoteContent);
+                    await _dataContext.SaveChangesAsync(); 
+                    return RedirectToAction("Index");
+                }
+                return Redirect("~/Identity/AccessDenied");
+            }
+            return View(model);
+        }
         public async Task<ActionResult> Share(int id) {
             var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
             var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
@@ -179,7 +216,8 @@ namespace ProjektNotatek.Controllers {
         }
 
         private async Task<List<Note>> GetPublicNotes(string username) {
-            var result = await _dataContext.Notes.Where(n => n.IsPublic == true && !n.Username.Equals(username)).ToListAsync();
+            var result = await _dataContext.Notes
+                .Where(n => n.IsPublic == true && !n.Username.Equals(username)).ToListAsync();
             return result;
         }
 
@@ -205,7 +243,8 @@ namespace ProjektNotatek.Controllers {
         private Note CreateEncryptedNote(Note note) {
             note.IsPublic = false;
             note.IsEncrypted = true;
-            NoteEncrypter.Encrypt(note.Content,note.Password,out string encodedcontent, out string encodedpassword);
+            NoteEncrypter.Encrypt(note.Content,note.Password
+                ,out string encodedcontent, out string encodedpassword);
             note.Password = encodedpassword;
             note.Content= encodedcontent;
 
@@ -225,31 +264,41 @@ namespace ProjektNotatek.Controllers {
             return Redirect("~/Identity/AccessDenied");
         }
         [HttpPost]
-        public async Task<ActionResult> GetEncrypt(GetEncryptedModel model, int id) {
-            var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
-            var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
-            if (note != null && username != null) {
-                if (username.Equals(note.Username)) {
-                    CustomPasswordHasher passwordHasher = new();
-                    if (!passwordHasher.VerifyPassword(Convert.FromBase64String(note.Password), model.Password, out int embeddedIterCount)) {
-                        ModelState.AddModelError("GetEncrypt", "Wrong password");
-                        return View(model);
+        public async Task<ActionResult> GetEncrypt(GetEncryptedModel model, int id)
+        {
+            if (ModelState.IsValid)
+            {
+                var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
+                var username = HttpContext.User.FindFirstValue(ClaimTypes.Name);
+                if (note != null && username != null)
+                {
+                    if (username.Equals(note.Username))
+                    {
+                        CustomPasswordHasher passwordHasher = new();
+                        if (!passwordHasher.VerifyPassword(
+                            Convert.FromBase64String(note.Password), model.Password
+                            , out int embeddedIterCount))
+                        {
+                            ModelState.AddModelError("GetEncrypt", "Wrong password");
+                            return View(model);
+                        }
+                        if (embeddedIterCount == 10000)
+                        {
+                            var decryptedContent = NoteEncrypter.Decrypt(note.Content, note.Password);
+                            var model1 = new GetNoteModel
+                            {
+                                Content = decryptedContent,
+                                Author = note.Username,
+                                Title = note.Title
+                            };
+                            return View("Get", model1);
+                        }
+                        return Redirect("~/Home/Error");
                     }
-                    if (embeddedIterCount == 10000) {
-                        note.Content = NoteEncrypter.Decrypt(note.Content,note.Password);
-                        var model1 = new GetNoteModel {
-                            Content = note.Content,
-                            Author = note.Username,
-                            Title = note.Title
-                        };
-                        return View("Get", model1);
-                    }
-                    return Redirect("~/Home/Error");
-
                 }
                 return Redirect("~/Identity/AccessDenied");
             }
-            return Redirect("~/Identity/AccessDenied");
+            return View(model);
         }
 
     }
