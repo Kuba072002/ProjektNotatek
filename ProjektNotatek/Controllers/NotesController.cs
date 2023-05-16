@@ -156,6 +156,30 @@ namespace ProjektNotatek.Controllers {
             return Redirect("~/Identity/AccessDenied");
         }
 
+        public async Task<ActionResult> SetPrivateAsync(int id)
+        {
+            var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
+            if (HttpContext.User.FindFirstValue(ClaimTypes.Name).Equals(note.Username))
+            {
+                note.IsPublic = false;
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return Redirect("~/Identity/AccessDenied");
+        }
+
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            var note = await _dataContext.Notes.FirstOrDefaultAsync(x => x.Id == id);
+            if (HttpContext.User.FindFirstValue(ClaimTypes.Name).Equals(note.Username))
+            {
+                _dataContext.Remove(note);
+                await _dataContext.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            return Redirect("~/Identity/AccessDenied");
+        }
+
         private async Task<List<Note>> GetPublicNotes(string username) {
             var result = await _dataContext.Notes.Where(n => n.IsPublic == true && !n.Username.Equals(username)).ToListAsync();
             return result;
