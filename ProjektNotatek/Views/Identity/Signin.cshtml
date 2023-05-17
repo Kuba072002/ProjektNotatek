@@ -4,23 +4,28 @@
     ViewData["Title"] = "Signin";
 }
 
-<form asp-action="SignIn" method="post">
-
+<form asp-action="SignIn" method="post" class="d-flex flex-column align-items-center">
+<div class="border rounded p-4">
+    <h1 class="text-center">Sign in</h1>
     @Html.ValidationSummary()
 
-    <div class="form-group col-4">
+    <div class="form-group">
         <label asp-for="Email">Email:</label>
         <input type-="text" asp-for="Email"  class="form-control" />
     </div>
     <br/>
-    <div class="form-group col-4">
+    <div class="form-group">
         <label asp-for="Password">Password:</label>
         <input type-="password" asp-for="Password"  class="form-control"/>
     </div>
     <br/>
     <div class="form-group">
-        <a asp-action="ForgotPassword">Forgot Password</a>
+        <a asp-action="ForgotPassword">Forgot Password?</a>
     </div>
     <br/>
-    <button type="submit" class="btn btn-primary">Sign In</button>
+    <button type="submit" class="btn btn-primary w-100">Sign In</button>
+    <div class="alert alert-info mt-3">
+        If you don't have an account, please <a asp-action="Signup">Sign up</a>
+    </div>
+</div>
 </form>
