@@ -33,12 +33,11 @@ namespace ProjektNotatek.Controllers {
                     if (result.Succeeded) {
                         user = await _userManager.FindByEmailAsync(model.Email);
 
-                        var claims = new List<Claim> {
-                            new Claim(ClaimTypes.NameIdentifier, user.Id),
-                            new Claim(ClaimTypes.Name, user.UserName),
-                            new Claim(ClaimTypes.Role, "User")
-                        };
-                        await _userManager.AddClaimsAsync(user,claims);
+                        //var claims = new List<Claim> {
+                        //    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                        //    new Claim(ClaimTypes.Name, user.UserName)
+                        //};
+                        //await _userManager.AddClaimsAsync(user,claims);
 
                         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         var confiramtionLink = Url
